@@ -46,13 +46,13 @@ kubectl get nodes
 ```
 
 ## create the 2 users and attach the policy 
-## there will be one config file 
+## there will be one config file in eks-full-access instance
 
 ```
 kubectl edit configmap aws-auth -n kube-system
 ```
 
-## paste under the map roles
+## paste under the map roles in eks-full-access instance
 
 ```
 mapUsers: |
@@ -68,7 +68,7 @@ mapUsers: |
 
 ## role and rolebinnding 
 
-## role .. create the any yaml file and apply to create 
+## role .. create the any yaml file and apply to create and in eks-full-access instance
 
 ```
 apiVersion: rbac.authorization.k8s.io/v1
@@ -82,7 +82,7 @@ rules:
   verbs: ["get", "list", "create", "update", "delete", "watch"]
 ```
 
-## rolebinding .. create the any yaml file and apply to create
+## rolebinding .. create the any yaml file and apply to create in eks-full-access instance
 
 ```
 apiVersion: rbac.authorization.k8s.io/v1
@@ -98,6 +98,24 @@ roleRef:
   kind: Role
   name: dev-role
   apiGroup: rbac.authorization.k8s.io
+```
+
+## created the pod in developer-namespace in the developer instance 
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dev-pod
+  namespace: developer-namespace
+  labels:
+    app: dev-app
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx:latest
+      ports:
+        - containerPort: 80
 ```
 
 
