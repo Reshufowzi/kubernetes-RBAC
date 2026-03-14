@@ -30,5 +30,20 @@ kubectl get nodes
 
 ### Role , RoleBinding , ClusterRole , ClusterRoleBinding , ServiceAccount 
 
+## create the policy 
+```
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "Statement1",
+			"Effect": "Allow",
+			"Action": ["eks:DescribeCluster"], 
+			"Resource": "arn:aws:eks:us-east-1:128913199644:cluster/mycluster"
+		}
+	]
+}
+```
+
 
 
