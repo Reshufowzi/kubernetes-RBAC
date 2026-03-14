@@ -66,5 +66,40 @@ mapUsers: |
         - tester-grp
 ```
 
+## role and rolebinnding 
+
+## role .. create the any yaml file and apply to create 
+
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: dev-role
+  namespace: developer-namespace
+rules:
+- apiGroups: ["", "apps", "batch"]
+  resources: ["pods", "services", "deployments", "jobs"]
+  verbs: ["get", "list", "create", "update", "delete", "watch"]
+```
+
+## rolebinding .. create the any yaml file and apply to create
+
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: dev-binding
+  namespace: developer-namespace
+subjects:
+- kind: Group
+  name: developer-grp
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: dev-role
+  apiGroup: rbac.authorization.k8s.io
+```
+
+
 
 
