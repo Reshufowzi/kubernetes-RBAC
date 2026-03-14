@@ -45,5 +45,12 @@ kubectl get nodes
 }
 ```
 
+## create the 2 users and attach the policy 
+## there will be one config file 
+
+```
+kubectl edit configmap aws-auth -n kubesystem
+```
+
 
 
