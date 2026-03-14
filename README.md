@@ -22,3 +22,13 @@ kubectl get nodes
 ```
 
 ### Created the 5 instances and the 2 is for the EKS and the other 3 is the accessing the developer and tester and the root 
+
+## developer user full permission in one namespace 
+## tester only view permission in all namespace or certain namespace 
+
+### Role Based Access Control 
+
+# Role , RoleBinding , ClusterRole , ClusterRoleBinding , ServiceAccount 
+
+
+
