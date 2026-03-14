@@ -10,3 +10,11 @@ sudo mv kubectl /usr/local/bin/
 
 kubectl version
 ```
+
+```
+aws configure
+```
+```
+aws eks --region us-east-1 update-kubeconfig --name mycluster
+```
+
