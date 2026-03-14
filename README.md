@@ -119,9 +119,7 @@ aws configure
 ```
 aws eks --region us-east-1 update-kubeconfig --name mycluster
 ```
-```
-kubectl get nodes
-```
+
 ## it will helps to access the developer instance 
 
 
@@ -141,6 +139,32 @@ spec:
       image: nginx:latest
       ports:
         - containerPort: 80
+```
+
+## in the eks access full instance .. create the yaml and run
+
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: view-role
+rules:
+- apiGroups: ["", "apps", "batch"]
+  resources: ["pods", "services", "deployments", "jobs"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: readonly-binding
+subjects:
+- kind: Group
+  name: tester-grp
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: view-role
+  apiGroup: rbac.authorization.k8s.io
 ```
 
 
