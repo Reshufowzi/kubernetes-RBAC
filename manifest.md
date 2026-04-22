@@ -136,7 +136,6 @@ kubectl get all,configmap,secret,pvc,ingress --all-namespaces
 ```
 kubectl get nodes
 kubectl get namespaces
-kubectl get storageclass
 
 ```
 ```
@@ -146,4 +145,37 @@ kubectl describe <resource> → deep inspection
 kubectl logs <pod> → application logs
 
 ```
+```
+Kubernetes Cluster
+│
+├── dev (namespace)
+│   ├── frontend pod
+│   ├── backend pod
+│   └── db pod
+│
+├── staging (namespace)
+│   ├── frontend pod
+│   ├── backend pod
+│
+└── prod (namespace)
+    ├── frontend pod
+    ├── backend pod
+
+```
+```
+Kubernetes Cluster
+│
+├── DEV Environment
+│   ├── dev-frontend   → ✅ Namespace
+│   └── dev-backend    → ✅ Namespace
+│
+├── STAGING Environment
+│   ├── staging-frontend → ✅ Namespace
+│   └── staging-backend  → ✅ Namespace
+│
+└── PRODUCTION Environment
+    ├── prod-frontend  → ✅ Namespace
+    └── prod-backend   → ✅ Namespace
+```
+
 
