@@ -96,4 +96,54 @@ spec:
         ports:
         - containerPort: 80
 ```
+# To see most of the running resources in Kubernetes:
+```
+kubectl get all
+```
+```
+This shows:
+
+Pods
+Services
+Deployments
+ReplicaSets
+
+```
+```
+kubectl get all -n <namespace>
+
+```
+```
+kubectl get all --all-namespaces
+```
+# To list ALL resource types first
+
+```
+kubectl api-resources
+```
+
+```
+kubectl get configmaps
+kubectl get secrets
+kubectl get ingress
+kubectl get pvc
+kubectl get nodes
+
+```
+```
+kubectl get all,configmap,secret,pvc,ingress --all-namespaces
+```
+```
+kubectl get nodes
+kubectl get namespaces
+kubectl get storageclass
+
+```
+```
+kubectl get all → quick check
+--all-namespaces → debugging production issues
+kubectl describe <resource> → deep inspection
+kubectl logs <pod> → application logs
+
+```
 
