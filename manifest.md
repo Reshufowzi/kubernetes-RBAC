@@ -178,4 +178,69 @@ Kubernetes Cluster
     └── prod-backend   → ✅ Namespace
 ```
 
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: dev-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: nginx
+        env:
+        - name: APP_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-config
+              key: APP_ENV
+        - name: API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-config
+              key: API_URL
+```
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: dev-frontend
+spec:
+  type: LoadBalancer
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      port: 80        # External port
+      targetPort: 80  # Container port (nginx)
+```
+```
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev-frontend
+```
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: dev-frontend
+data:
+  APP_ENV: "development"
+  API_URL: "http://dev-backend-service:8080"
+
+```
+
+
 
