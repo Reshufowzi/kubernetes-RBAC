@@ -23,7 +23,7 @@ metadata:
   name: mysql-stateful
 spec:
   serviceName: mysql-headless
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: mysql
@@ -36,6 +36,7 @@ spec:
       containers:
       - name: mysql
         image: mysql:8.0
+
         ports:
         - containerPort: 3306
 
@@ -47,13 +48,15 @@ spec:
 
         volumeMounts:
         - name: mysql-storage
-          mountPath: /var/lib/mysql   # 👈 MySQL data dir
+          mountPath: /var/lib/mysql
 
   volumeClaimTemplates:
   - metadata:
       name: mysql-storage
     spec:
-      accessModes: ["ReadWriteOnce"]
+      storageClassName: gp2
+      accessModes:
+        - ReadWriteOnce
       resources:
         requests:
           storage: 2Gi
