@@ -216,7 +216,7 @@ spec:
               number: 80
 ```
 
-#new
+
 ```
 apiVersion: v1
 kind: Namespace
