@@ -83,63 +83,58 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
   --set serviceAccount.name=aws-load-balancer-controller2
 ```
 
-## 👥 Multi-Team Namespaces with Shared ALB
-
-### Create Namespaces
-
-```yaml
+```
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: frontend-application
+  name: namespace1
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: backend-application
+  name: namespace2
+
 ```
-
-### frontend-app
-
-```yaml
+```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend-app
-  namespace: frontend-application
+  name: app1
+  namespace: namespace1
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: frontend-app
+      app: app1
   template:
     metadata:
       labels:
-        app: frontend-app
+        app: app1
     spec:
       containers:
-      - name: frontend-app
-        image: httpd
+      - name: app1
+        image: hashicorp/http-echo
+        args: ["-text=Namespace1 result"]
         ports:
-        - containerPort: 8080
+        - containerPort: 5678
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-app-service
-  namespace: frontend-application
+  name: namespace1-svc
+  namespace: namespace1
 spec:
   selector:
-    app: frontend-app
+    app: app1
   ports:
   - port: 80
-    targetPort: 8080
+    targetPort: 5678
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: frontend-app-ingress
-  namespace: frontend-application
+  name: namespace1-ingress
+  namespace: namespace1
   annotations:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
@@ -149,55 +144,54 @@ spec:
   rules:
   - http:
       paths:
-      - path: /frontend
+      - path: /firstnamespace
         pathType: Prefix
         backend:
           service:
-            name: frontend-app-service
+            name: namespace1-svc
             port:
               number: 80
 ```
-
-### Backend-app
-```yaml
+```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-app
-  namespace: backend-application 
+  name: app2
+  namespace: namespace2
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: backend-app
+      app: app2
   template:
     metadata:
       labels:
-        app: backend-app
+        app: app2
     spec:
       containers:
-      - name: backend-app
-        image: nginx
+      - name: app2
+        image: hashicorp/http-echo
+        args: ["-text=Namespace2 result"]
         ports:
-        - containerPort: 8081
+        - containerPort: 5678
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-app-service
-  namespace: backend-application
+  name: namespace2-svc
+  namespace: namespace2
 spec:
   selector:
-    app: backend-app
+    app: app2
   ports:
   - port: 80
-    targetPort: 8081
+    targetPort: 5678
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: backend-app-ingress
-  namespace: backend-application
+  name: namespace2-ingress
+  namespace: namespace2
   annotations:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
@@ -207,147 +201,14 @@ spec:
   rules:
   - http:
       paths:
-      - path: /backend
+      - path: /secondnamespace
         pathType: Prefix
         backend:
           service:
-            name: backend-app-service
-            port:
-              number: 80
-```
-
-
-```
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: frontend-application
-
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: backend-application
-
-# ---------------- FRONTEND ----------------
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: frontend-app
-  namespace: frontend-application
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: frontend-app
-  template:
-    metadata:
-      labels:
-        app: frontend-app
-    spec:
-      containers:
-      - name: frontend-app
-        image: httpd
-        ports:
-        - containerPort: 80
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: frontend-app-service
-  namespace: frontend-application
-spec:
-  selector:
-    app: frontend-app
-  ports:
-  - port: 80
-    targetPort: 80
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: frontend-app-ingress
-  namespace: frontend-application
-  annotations:
-    kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/group.name: shared-alb
-spec:
-  rules:
-  - http:
-      paths:
-      - path: /frontend
-        pathType: Prefix
-        backend:
-          service:
-            name: frontend-app-service
-            port:
-              number: 80
-
-# ---------------- BACKEND ----------------
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: backend-app
-  namespace: backend-application
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: backend-app
-  template:
-    metadata:
-      labels:
-        app: backend-app
-    spec:
-      containers:
-      - name: backend-app
-        image: nginx
-        ports:
-        - containerPort: 80
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: backend-app-service
-  namespace: backend-application
-spec:
-  selector:
-    app: backend-app
-  ports:
-  - port: 80
-    targetPort: 80
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: backend-app-ingress
-  namespace: backend-application
-  annotations:
-    kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/group.name: shared-alb
-spec:
-  rules:
-  - http:
-      paths:
-      - path: /backend
-        pathType: Prefix
-        backend:
-          service:
-            name: backend-app-service
+            name: namespace2-svc
             port:
               number: 80
 
 ```
+
 
