@@ -164,7 +164,7 @@ metadata:
   name: app1
   namespace: namespace1
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: app1
@@ -221,7 +221,7 @@ metadata:
   name: app2
   namespace: namespace2
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: app2
