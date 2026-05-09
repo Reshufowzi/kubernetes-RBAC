@@ -50,6 +50,68 @@ eksctl create iamserviceaccount \
   --attach-policy-arn arn:aws:iam::account-id:policy/AWSLoadBalancerControllerIAMPolicy \
   --approve
 ```
+## troubleshoot Run this final verification:
+
+```
+kubectl get sa aws-load-balancer-controller2 \
+-n kube-system -o yaml
+```
+## not came means
+
+```
+eksctl create iamserviceaccount \
+  --cluster mycluster \
+  --region eu-north-1 \
+  --namespace kube-system \
+  --name aws-load-balancer-controller2 \
+  --attach-policy-arn arn:aws:iam::572885593612:policy/AWSLoadBalancerControllerIAMPolicy \
+  --override-existing-serviceaccounts \
+  --approve
+```
+```
+aws cloudformation list-stacks --region eu-north-1
+```
+## output
+
+## eksctl-mycluster-addon-iamserviceaccount-kube-system-aws-load-balancer-controller2
+
+```
+kubectl get sa -n kube-system
+```
+## output
+## aws-load-balancer-controller2
+
+```
+aws cloudformation update-termination-protection \
+  --no-enable-termination-protection \
+  --stack-name eksctl-mycluster-addon-iamserviceaccount-kube-system-aws-load-balancer-controller2 \
+  --region eu-north-1
+```
+```
+aws cloudformation delete-stack \
+  --stack-name eksctl-mycluster-addon-iamserviceaccount-kube-system-aws-load-balancer-controller2 \
+  --region eu-north-1
+```
+```
+aws cloudformation wait stack-delete-complete \
+  --stack-name eksctl-mycluster-addon-iamserviceaccount-kube-system-aws-load-balancer-controller2 \
+  --region eu-north-1
+```
+```
+eksctl create iamserviceaccount \
+  --cluster mycluster \
+  --region eu-north-1 \
+  --namespace kube-system \
+  --name aws-load-balancer-controller2 \
+  --attach-policy-arn arn:aws:iam::572885593612:policy/AWSLoadBalancerControllerIAMPolicy \
+  --approve
+```
+```
+kubectl get sa -n kube-system
+```
+
+
+
 ### 📦 Helm Setup
 
 ```bash
