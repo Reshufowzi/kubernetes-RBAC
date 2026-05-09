@@ -1,5 +1,5 @@
 ```bash
-aws eks --region us-east-1 update-kubeconfig --name mycluster
+aws eks --region eu-north-1 update-kubeconfig --name mycluster
 ```
 
 ### Install kubectl for Linux
@@ -28,7 +28,7 @@ sudo install -m 0755 /tmp/eksctl /usr/local/bin && rm /tmp/eksctl
 
 ```bash
 eksctl utils associate-iam-oidc-provider \
-  --region=us-east-1 \
+  --region=eu-north-1 \
   --cluster=mycluster \
   --approve
 ```
@@ -44,7 +44,7 @@ Create the IAM policy in AWS as: `AWSLoadBalancerControllerIAMPolicy`
 ```bash
 eksctl create iamserviceaccount \
   --cluster mycluster \
-  --region us-east-1 \
+  --region eu-north-1 \
   --namespace kube-system \
   --name aws-load-balancer-controller2 \
   --attach-policy-arn arn:aws:iam::account-id:policy/AWSLoadBalancerControllerIAMPolicy \
@@ -128,7 +128,7 @@ helm repo update
 ```bash
 aws eks describe-cluster \
   --name mycluster \
-  --region us-east-1 \
+  --region eu-north-1 \
   --query "cluster.resourcesVpcConfig.vpcId" \
   --output text
 ```
@@ -139,7 +139,7 @@ aws eks describe-cluster \
 helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
   -n kube-system \
   --set clusterName=mycluster \
-  --set region=us-east-1 \
+  --set region=eu-north-1 \
   --set vpcId=vpc-id \
   --set serviceAccount.create=false \
   --set serviceAccount.name=aws-load-balancer-controller2
